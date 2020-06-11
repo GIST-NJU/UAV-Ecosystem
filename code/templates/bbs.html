@@ -1,0 +1,667 @@
+{%extends "base.html"%}
+{% block title %}     
+    <title>讨论区-无人机故障案例/故障交流/失误案例-飞客社区</title>
+{% endblock %}
+{% block nav_menu %}
+    <ul class="navbar-nav mr-auto pt-3 pt-lg-0">
+        <li class="nav-item">
+            <a class="nav-link " href="/">首页</a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="/bbs">讨论区</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/diagnosis">智能诊断</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/papers">文献资源</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/api">服务接口</a>
+        </li>
+    </ul>
+{% endblock %}
+{% block content %}
+    <div class="banner_w3lspvt position-relative">
+        <div class="container">
+            <div class="row">
+                <div class="col-8 bg mr-1">
+                    <div class="row shadow-lg rounded">
+                        <div class="col">
+                            <div class="row mt-3">
+                                <div class="col pl-3">
+                                    <h5 class="font-weight-bold"><li class="fa fa-square mr-1"></li> 分享与求助</h5>
+                                </div>
+                                <div class="col text-right pr-3">
+                                    <a href="#publish_editor" class="btn btn-info" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="publish_editor"><li class="fa fa-pencil mr-2"></li>我要发布 </a>
+                                </div>
+                            </div>
+                            <div class="row mt-3 collapse" id="publish_editor">
+                                <div class="col px-3">
+                                    <form action="/publish_post" method = "POST" target="postTo" id='uploadpaper'>
+                                        <p>
+                                            <label for="title" class="text-muted">输入标题</label>
+                                            <textarea class="form-control" id="title" rows="1", name="title"></textarea>
+                                        </p>
+                                        <input type="hidden" id="contentHtml" name="contentHtml">
+                                        <label for="editor" class="text-muted">编辑内容</label>
+                                        <div class="form-group mt-0" id="editor">
+                                        </div>
+                                        <p><input class="btn btn-info" type="submit" value = "发布" /></p>
+                                    </form>                                    
+                                </div>
+                            </div>
+
+                            <div class="row bg-light mt-3">
+                                <div class="col pl-0 py-2">
+                                    <div class="row mx-1">
+                                        <div class="col px-0">
+                                            <ul class="nav nav-pills" id="type">
+                                                <li class="nav-item {{type_text['全部']}}">
+                                                    <a class="nav-link" href="">全部</a>
+                                                </li>
+                                                <li class="nav-item {{type_text['Bias']}}">
+                                                    <a class="nav-link" href="">Bias</a>
+                                                </li>
+                                                <li class="nav-item {{type_text['Drift']}}">
+                                                    <a class="nav-link" href="">Drift</a>
+                                                </li>
+                                                <li class="nav-item {{type_text['Performance degradation']}}">
+                                                    <a class="nav-link" href="">Performance degradation</a>
+                                                </li>
+                                                <li class="nav-item {{type_text['Freezing']}}">
+                                                    <a class="nav-link" href="">Freezing</a>
+                                                </li>
+                                                <li class="nav-item {{type_text['Calibration error']}}">
+                                                    <a class="nav-link" href="">Calibration error</a>
+                                                </li>
+                                                <li class="nav-item {{type_text['Lock in place']}}">
+                                                    <a class="nav-link" href="">Lock in place</a>
+                                                </li>
+                                                <li class="nav-item {{type_text['Float']}}">
+                                                    <a class="nav-link" href="">Float</a>
+                                                </li>
+                                                <li class="nav-item {{type_text['Hard over']}}">
+                                                    <a class="nav-link" href="">Hard over</a>
+                                                </li>
+                                                <li class="nav-item {{type_text['Loss of Effectiveness']}}">
+                                                    <a class="nav-link" href="">Loss of Effectiveness</a>
+                                                </li>
+                                                <li class="nav-item {{type_text['失误操作']}}">
+                                                    <a class="nav-link" href="">失误操作</a>
+                                                </li>
+                                                <li class="nav-item {{type_text['电池故障']}}">
+                                                    <a class="nav-link" href="">电池故障</a>
+                                                </li>
+                                                <li class="nav-item {{type_text['信号干扰']}}">
+                                                    <a class="nav-link" href="">信号干扰</a>
+                                                </li>
+                                                <li class="nav-item {{type_text['避障失效']}}">
+                                                    <a class="nav-link" href="">避障失效</a>
+                                                </li>
+                                                <li class="nav-item {{type_text['返航故障']}}">
+                                                    <a class="nav-link" href="">返航故障</a>
+                                                </li>
+                                                <li class="nav-item {{type_text['其他']}}">
+                                                    <a class="nav-link" href="">其他</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            
+                            <div class="row mt-3">
+                                <div class="col pl-0">
+                                    <div class="row mx-1">
+                                        <div class="col px-0">
+                                            <nav aria-label="breadcrumb bg-white" id ="order">
+                                                <ol class="bg-white breadcrumb">
+                                                    <li class="breadcrumb-item {{order_text['最新发布']}}">
+                                                        <a href="#" >最新发布</a>
+                                                    </li>
+                                                    <li class="breadcrumb-item {{order_text['最新回复']}}">
+                                                        <a href="#" >最新回复</a>
+                                                    </li>
+                                                    <li class="breadcrumb-item {{order_text['最热']}}">
+                                                        <a href="#" >最热</a>
+                                                    </li>
+                                                    <li class="breadcrumb-item {{order_text['精华']}}">
+                                                        <a href="#" >精华</a>
+                                                    </li>
+                                                </ol>
+                                            </nav>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col">
+                                    {% for item in data%}
+                                        <div class="row py-3 mx-1 border-bottom">
+                                            <div class="col-1 px-0 mr-2">
+                                                <a href="/user/{{item['user.id']}}/0">
+                                                    <img src="{{item['userIcon']}}" alt="{{item['authorName']}}" class="rounded-circle" width="50" height="50">
+                                                </a>
+                                            </div>
+                                            <div class="col-10 px-0 ml-2">
+                                                <div class="row mb-2">
+                                                    <div class="col">
+                                                        <a class="mx-0 py-0 text-dark" href="/post/{{item['postId']}}">
+                                                            {{item['title']}}
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="row mt-2">
+                                                    <div class="col-3">
+                                                        <small>
+                                                             <a class="mx-0 py-0 text-danger" style="text-decoration:none;" href="/user/{{item['user.id']}}/0">{{item['userName']}}</a>
+                                                        </small>
+                                                    </div>
+                                                    <div class="col-3 px-0 text-muted">
+                                                        <small>{{item['createTime'][:10]}}发布</small> 
+                                                    </div>
+                                                    <div class="col-3 px-0 text-muted">
+                                                        <small>{{item['reply_tag']}}</small>                                               
+                                                    </div>
+                                                    <div class="col-3 px-0 text-right">
+                                                        <small>
+                                                            <span class="text-muted mr-1">
+                                                                回复{{item['replyCnts']}}
+                                                            </span>
+                                                            <span class="text-muted ml-1">
+                                                                浏览{{item['lookCnts']}}
+                                                            </span>
+                                                        </small>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col text-center">
+                                    {{pagination.links}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3 ml-1">
+                    <div class="row shadow-lg rounded mt-1">
+                        <div class="col">
+                            <h5 class="mt-2 font-weight-bold"><li class="fa fa-square mr-1"></li>实时推荐</h5>
+                            {% for rec_post in rec_posts %}
+                                <div class="row mx-1 border-bottom">
+                                    <div class="col py-2">
+                                        <div class="row">
+                                            <div class="col px-0">
+                                                <small>
+                                                    <a class="text-dark" style="text-decoration:none;" href="/post/{{rec_post['postId']}}">{{rec_post['title']}}</a>
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="row text-muted">
+                                            <div class="col-9 px-0 text-left">
+                                                <small>
+                                                    发布于{{rec_post['createTime']}}
+                                                </small>
+                                            </div>
+                                            <div class="col-3 px-0 text-right">
+                                                <small>
+                                                    浏览({{rec_post['lookCnts']}})
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>  
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="row  shadow-lg rounded mt-1">
+                        <div class="col">
+                            <h5 class="mt-2 font-weight-bold"><li class="fa fa-square mr-1"></li>近期热点</h5>
+                            <div class="row mx-1 border-bottom">
+                                <div class="col py-2">
+                                    <div class="row text-muted">
+                                        <div class="col-4 px-0 text-left">
+                                            <small>
+                                                热词
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-center">
+                                            <small>
+                                                热词类型
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-right">
+                                            <small>
+                                                相关链接
+                                            </small>
+                                        </div>
+                                    </div>                                    
+                                </div>
+                            </div>
+                            <div class="row mx-1 border-bottom">
+                                <div class="col py-2">
+                                    <div class="row text-muted">
+                                        <div class="col-4 px-0 text-left">
+                                            <small class="text-danger">
+                                                精灵4
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-center">
+                                            <small>
+                                                无人机型号
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-right">
+                                            <small class="text-primary">
+                                                <a href="/search?key_word=精灵4">相关帖子</a>
+                                            </small>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row mx-1 border-bottom">
+                                <div class="col py-2">
+                                    <div class="row text-muted">
+                                        <div class="col-4 px-0 text-left">
+                                            <small class="text-danger">
+                                                悟2
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-center">
+                                            <small>
+                                                无人机型号
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-right">
+                                            <small class="text-primary">
+                                                <a href="/search?key_word=悟2">相关帖子</a>
+                                            </small>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row mx-1 border-bottom">
+                                <div class="col py-2">
+                                    <div class="row text-muted">
+                                        <div class="col-4 px-0 text-left">
+                                            <small class="text-danger">
+                                                御2
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-center">
+                                            <small>
+                                                无人机型号
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-right">
+                                            <small class="text-primary">
+                                                <a href="/search?key_word=御2">相关帖子</a>
+                                            </small>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row mx-1 border-bottom">
+                                <div class="col py-2">
+                                    <div class="row text-muted">
+                                        <div class="col-4 px-0 text-left">
+                                            <small class="text-danger">
+                                                楼顶
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-center">
+                                            <small>
+                                                发生环境
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-right">
+                                            <small class="text-primary">
+                                                <a href="/search?key_word=楼顶">相关帖子</a>
+                                            </small>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row mx-1 border-bottom">
+                                <div class="col py-2">
+                                    <div class="row text-muted">
+                                        <div class="col-4 px-0 text-left">
+                                            <small class="text-danger">
+                                                电线
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-center">
+                                            <small>
+                                                发生环境
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-right">
+                                            <small class="text-primary"> 
+                                                <a href="/search?key_word=电线">相关帖子</a>
+                                            </small>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row mx-1 border-bottom">
+                                <div class="col py-2">
+                                    <div class="row text-muted">
+                                        <div class="col-4 px-0 text-left">
+                                            <small class="text-danger">
+                                                树枝
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-center">
+                                            <small>
+                                                发生环境
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-right">
+                                            <small class="text-primary">
+                                                <a href="/search?key_word=树枝">相关帖子</a>
+                                            </small>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row mx-1 border-bottom">
+                                <div class="col py-2">
+                                    <div class="row text-muted">
+                                        <div class="col-4 px-0 text-left">
+                                            <small class="text-danger">
+                                                航拍
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-center">
+                                            <small>
+                                                人行为
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-right">
+                                            <small class="text-primary">
+                                                <a href="/search?key_word=航拍">相关帖子</a>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mx-1 border-bottom">
+                                <div class="col py-2">
+                                    <div class="row text-muted">
+                                        <div class="col-4 px-0 text-left">
+                                            <small class="text-danger">
+                                                打杆
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-center">
+                                            <small>
+                                                人行为
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-right">
+                                            <small class="text-primary">
+                                                <a href="/search?key_word=打杆">相关帖子</a>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mx-1 border-bottom">
+                                <div class="col py-2">
+                                    <div class="row text-muted">
+                                        <div class="col-4 px-0 text-left">
+                                            <small class="text-danger">
+                                                操作失误
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-center">
+                                            <small>
+                                                人行为
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-right">
+                                            <small class="text-primary">
+                                                <a href="/search?key_word=操作失误">相关帖子</a>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mx-1 border-bottom">
+                                <div class="col py-2">
+                                    <div class="row text-muted">
+                                        <div class="col-4 px-0 text-left">
+                                            <small class="text-danger">
+                                                失控
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-center">
+                                            <small>
+                                                无人机行为
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-right">
+                                            <small class="text-primary">
+                                                <a href="/search?key_word=失控">相关帖子</a>
+                                            </small>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row mx-1 border-bottom">
+                                <div class="col py-2">
+                                    <div class="row text-muted">
+                                        <div class="col-4 px-0 text-left">
+                                            <small class="text-danger">
+                                                坠落
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-center">
+                                            <small>
+                                                无人机行为
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-right">
+                                            <small class="text-primary">
+                                                <a href="/search?key_word=坠落">相关帖子</a>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mx-1 border-bottom">
+                                <div class="col py-2">
+                                    <div class="row text-muted">
+                                        <div class="col-4 px-0 text-left">
+                                            <small class="text-danger">
+                                                姿态模式
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-center">
+                                            <small>
+                                                无人机行为
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-right">
+                                            <small class="text-primary">
+                                                <a href="/search?key_word=姿态模式">相关帖子</a>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mx-1 border-bottom">
+                                <div class="col py-2">
+                                    <div class="row text-muted">
+                                        <div class="col-4 px-0 text-left">
+                                            <small class="text-danger">
+                                                炸机
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-center">
+                                            <small>
+                                                损坏情况
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-right">
+                                            <small class="text-primary">
+                                                <a href="/search?key_word=炸机">相关帖子</a>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mx-1 border-bottom">
+                                <div class="col py-2">
+                                    <div class="row text-muted">
+                                        <div class="col-4 px-0 text-left">
+                                            <small class="text-danger">
+                                                电池故障
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-center">
+                                            <small>
+                                                损坏情况
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-right">
+                                            <small class="text-primary">
+                                                <a href="/search?key_word=电池故障">相关帖子</a>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mx-1 border-bottom">
+                                <div class="col py-2">
+                                    <div class="row text-muted">
+                                        <div class="col-4 px-0 text-left">
+                                            <small class="text-danger">
+                                                失联
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-center">
+                                            <small>
+                                                损坏情况
+                                            </small>
+                                        </div>
+                                        <div class="col-4 px-0 text-right">
+                                            <small class="text-primary">
+                                                <a href="/search?key_word=失联">相关帖子</a>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row  shadow-lg rounded mb-1">
+                        <div class="col">
+                            <h5 class="mt-2 font-weight-bold"><li class="fa fa-square mr-1"></li>热门帖子</h5>
+                            {% for hot_post in hot_posts %}
+                                <div class="row mx-1 border-bottom">
+                                    <div class="col py-2">
+                                        <div class="row">
+                                            <div class="col px-0">
+                                                <small>
+                                                    <a class="text-dark" style="text-decoration:none;" href="/post/{{hot_post['postId']}}">{{hot_post['title']}}</a>
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="row text-muted">
+                                            <div class="col-9 px-0 text-left">
+                                                <small>
+                                                    发布于{{hot_post['createTime']}}
+                                                </small>
+                                            </div>
+                                            <div class="col-3 px-0 text-right">
+                                                <small>
+                                                    浏览({{hot_post['lookCnts']}})
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>  
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!--
+                    <div class="row  shadow-lg rounded mt-1">
+                        <div class="col">
+                            <h5 class="mt-2 font-weight-bold"><li class="fa fa-square mr-1"></li>活跃用户</h5>
+                            <div class="row mx-1 border-bottom">
+                                <div class="col-3"></div>
+                                <div class="col-3"></div>
+                                <div class="col-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                    -->
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock%}
+{% block script%}
+    {{super()}}
+    <script src="/static/js/changehref.js"></script>
+    <script type="text/javascript">
+            var E = window.wangEditor;
+            var editor = new E('#editor');
+            editor.customConfig.menus = [
+                'head',  // 标题
+                'bold',  // 粗体
+                'fontSize',  // 字号
+                'italic',  // 斜体
+			    'image',  // 插入图片
+                'underline',  // 下划线
+                'strikeThrough',  // 删除线
+                'foreColor',  // 文字颜色
+                //'list',  // 列表
+                'justify',  // 对齐方式
+                //'code' // 插入代码
+                'emoticon'
+            ];
+            editor.customConfig.emotions = [
+                    {
+                        // tab 的标题
+                        title: '默认',
+                        // type -> 'emoji' / 'image'
+                        type: 'image',
+                        // content -> 数组
+                        content: sina_emoji
+                    }
+            ];
+            editor.customConfig.onchange = function (html) {
+                $('#contentHtml').val(html)
+            }
+
+                        // 或者 var editor = new E( document.getElementById('editor') );
+            editor.customConfig.showLinkImg = false;
+                        // 配置服务器端地址
+            editor.customConfig.uploadImgServer = '/publish_post_img';
+            editor.customConfig.debug = location.href.indexOf('wangeditor_debug_mode=1') > 0;
+                        // 将图片大小限制为 100M
+            editor.customConfig.uploadImgMaxSize = 100 * 1024 * 1024
+            editor.customConfig.uploadImgMaxLength = 10000;
+            editor.customConfig.uploadFileName = 'file';
+            editor.create();
+            $('#contentHtml').val(editor.txt.html())
+    </script>     
+{% endblock %}

@@ -1,0 +1,9 @@
+<a href="#" onclick="hate_post('/hate_post/{{post_id}}')" class="text-success" style="text-decoration:none;">
+    {% if post_hate_flag %}
+        <li class="fa fa-thumbs-down fa-2x"></li>
+        <p>已踩</p>
+    {% else %}
+        <li class="fa fa-thumbs-o-down fa-2x"></li>
+        <p>无用</p>                                    
+    {% endif %}
+</a>

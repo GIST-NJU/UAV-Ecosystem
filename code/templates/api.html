@@ -1,0 +1,327 @@
+{%extends "base.html"%}
+{% block title %}     
+    <title>服务接口-无人机故障智能诊断/智能分析/Auto-FMEA-飞客社区</title>
+{% endblock %}
+{% block nav_menu %}
+    <ul class="navbar-nav mr-auto pt-3 pt-lg-0">
+        <li class="nav-item">
+            <a class="nav-link " href="/">首页</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/bbs">讨论区</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/diagnosis">智能诊断</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/papers">文献资源</a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="/api">服务接口</a>
+        </li>
+    </ul>
+{% endblock %}
+{% block content %}
+    <div class="banner_w3lspvt position-relative">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header px-0 py-0">
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="diagnosis-tab" data-toggle="tab" href="#diagnosis" role="tab" aria-controls="diagnosis" aria-selected="true">故障诊断</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="fmea-tab" data-toggle="tab" href="#fmea" role="tab" aria-controls="fmea" aria-selected="false">故障模式与影响分析</a>
+                                </li>                                      
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content" id="myTabContent">
+                                <div class="tab-pane fade show active" id="diagnosis" role="tabpanel" aria-labelledby="diagnosis-tab">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h1>故障诊断</h1>
+                                            <p>本接口将无人机故障描述文本分为预设的15类</p>
+                                            <p>预设的分类如下：</p>
+                                            <div class="row">
+                                                <div class="col-4 text-center">
+                                                    <p>
+                                                        <small>
+                                                        <table class="table table-bordered table-striped">
+                                                            <thead class="thead-light">
+                                                                <tr>
+                                                                    <th scope="col">
+                                                                        编号
+                                                                    </th>
+                                                                    <th scope="col">
+                                                                        分类
+                                                                    </th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>0</td>
+                                                                    <td>Bias</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>1</td>
+                                                                    <td>Drift</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>2</td>
+                                                                    <td>Performance degradation</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>3</td>
+                                                                    <td>Freezing</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>4</td>
+                                                                    <td>Calibration error</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>5</td>
+                                                                    <td>Lock in place</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>6</td>
+                                                                    <td>Float</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>7</td>
+                                                                    <td>Hard over</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>8</td>
+                                                                    <td>Loss of Effectiveness</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>9</td>
+                                                                    <td>失误操作</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>10</td>
+                                                                    <td>电池故障</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>11</td>
+                                                                    <td>信号干扰</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>12</td>
+                                                                    <td>避障失效</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>13</td>
+                                                                    <td>返航故障</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>14</td>
+                                                                    <td>其他</td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                        </small>
+                                                    </p>                                                    
+                                                </div>
+                                            </div>
+                                            <p><h5>URL</h5></p>
+                                            <p>
+                                                <span class="badge badge-pill badge-light">
+                                                    http://uavecosystem.cn/api/diagnosis
+                                                </span>
+                                            </p>
+                                            <p><h5>HTTP Method</h5></p>
+                                            <p>
+                                                <span class="badge badge-pill badge-light">
+                                                    POST
+                                                </span>
+                                            </p>
+                                            <p><h5>HTTP Header</h5></p>
+                                            <p>
+                                                <p>
+                                                    <span class="badge badge-pill badge-light ">
+                                                        Content-Type
+                                                        <small><p>&nbsp;&nbsp;&nbsp;&nbsp;application/json</p></small> 
+                                                    </span>
+                                                </p>
+                                                <p>
+                                                    <span class="badge badge-pill badge-light ">
+                                                        Accept
+                                                       <small><p>&nbsp;&nbsp; &nbsp;&nbsp;application/json</p></small> 
+                                                    </span>
+                                                </p>
+                                            </p>
+                                            <p><h5>HTTP 请求 Body</h5></p>
+                                            <p>
+                                                <p class="ml-2">
+                                                    JSON格式的列表，列表每个元素为一篇故障描述文本。比如：
+                                                </p>
+                                                <p class="ml-2 border px-1 py-1">
+                                                    <small>
+                                                    ["好吧，我承认操作失误撞玻璃上了！
+                                                      70多米坠落，竟然没有四分五裂，
+                                                      只是电池飞了，断了骨头连着筋！
+                                                      才买了不到半年啊 崭新崭新的AIR.
+                                                      但是，我有DJI care保驾护航。
+                                                      寄送当天大疆就回寄了，效率点赞！
+                                                      不知道是否是新机，客服说是符合出厂标准的合格机。
+                                                      新机所有设置重新开过，开始飞了！
+                                                      新手建议购买DJI care ！",<br>
+                                                     "某天下午玩，那时地面一点风也没有，拉高到500米，
+                                                     正准备拍云，突然提示风速过大，
+                                                     然后姿态球乱飘，
+                                                     一转眼飞飞机飘了300米，
+                                                     因为有干扰，所以失联了，
+                                                     我迅速往飞机那个方向跑，
+                                                     结果连上信号了以后飞机已经被风刮到一个两公里外的荒山沟里去了，
+                                                     还有百分之14的电，那么大的风开了运动档也飞不动了，
+                                                     最后迫降到了山里……提醒飞友，提示风速过大一定要注意",<br>
+                                                    ]                                                        
+                                                    </small>
+                                                </p>
+                                            </p>
+                                            <p><h5>HTTP 返回 Body</h5></p>
+                                            <p>
+                                                <p class="ml-2">
+                                                    JSON 格式的故障类型组成的列表。比如： ['Float', '电池故障', '失误操作']
+                                                </p>
+                                            </p>
+                                            <p><h1>Python调用示例</h1></p>
+                                            <p>
+                                                <p class="ml-2">
+                                                    <pre class="prettyprint">
+                                                        <code class="language-py">
+import json
+import requests
+
+CLASSIFY_URL = 'http://uavecosystem.cn/api/diagnosis'
+
+s = [
+    "好吧，我承认操作失误撞玻璃上了！70多米坠落，竟然没有四分五裂，只是电池飞了，断了骨头连着筋！才买了不到半年啊 崭新崭新的AIR啊",
+    "某天下午玩，那时地面一点风也没有，拉高到500米，正准备拍云，突然提示风速过大，然后姿态球乱飘，一转眼飞飞机飘了300米，因为有干扰，所以失联了，我迅速往飞机那个方向跑，结果连上信号了以后飞机已经被风刮到一个两公里外的荒山沟里去了，还有百分之14的电，那么大的风开了运动档也飞不动了，最后迫降到了山里……提醒飞友，提示风速过大一定要注意"
+]
+
+data = json.dumps(s)
+headers = {
+    'Content-Type': 'application/json'
+}
+resp = requests.post(CLASSIFY_URL, headers=headers, data=data.encode('utf-8'))
+print(resp.text)
+
+                                                        </code>
+                                                    </pre>
+                                                </p>
+                                            </p>                                
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="fmea" role="tabpanel" aria-labelledby="fmea-tab">
+                                    <div class="row">
+                                        <div class="col">
+                                            <h1>故障模式与影响分析</h1>
+                                            <p>本接口根据无人机故障描述文本完成故障模式与影响分析。具体地，识别出故障模式、故障发生概率、故障风险系数、故障造成的结果、无人机型号、发生环境、人的行为和无人机的行为</p>
+                                            <p><h5>URL</h5></p>
+                                            <p>
+                                                <span class="badge badge-pill badge-light">
+                                                    http://uavecosystem.cn/api/fmea
+                                                </span>
+                                            </p>
+                                            <p><h5>HTTP Method</h5></p>
+                                            <p>
+                                                <span class="badge badge-pill badge-light">
+                                                    POST
+                                                </span>
+                                            </p>
+                                            <p><h5>HTTP Header</h5></p>
+                                            <p>
+                                                <p>
+                                                    <span class="badge badge-pill badge-light ">
+                                                        Content-Type
+                                                        <small><p>&nbsp;&nbsp;&nbsp;&nbsp;application/json</p></small> 
+                                                    </span>
+                                                </p>
+                                                <p>
+                                                    <span class="badge badge-pill badge-light ">
+                                                        Accept
+                                                       <small><p>&nbsp;&nbsp; &nbsp;&nbsp;application/json</p></small> 
+                                                    </span>
+                                                </p>
+                                            </p>
+                                            <p><h5>HTTP 请求 Body</h5></p>
+                                            <p>
+                                                <p class="ml-2">
+                                                    JSON格式的列表，列表每个元素为一篇故障描述文本。比如：
+                                                </p>
+                                                <p class="ml-2 border px-1 py-1">
+                                                    <small>
+                                                    ["好吧，我承认操作失误撞玻璃上了！
+                                                      70多米坠落，竟然没有四分五裂，
+                                                      只是电池飞了，断了骨头连着筋！
+                                                      才买了不到半年啊 崭新崭新的AIR.
+                                                      但是，我有DJI care保驾护航。
+                                                      寄送当天大疆就回寄了，效率点赞！
+                                                      不知道是否是新机，客服说是符合出厂标准的合格机。
+                                                      新机所有设置重新开过，开始飞了！
+                                                      新手建议购买DJI care ！",<br>
+                                                     "某天下午玩，那时地面一点风也没有，拉高到500米，
+                                                     正准备拍云，突然提示风速过大，
+                                                     然后姿态球乱飘，
+                                                     一转眼飞飞机飘了300米，
+                                                     因为有干扰，所以失联了，
+                                                     我迅速往飞机那个方向跑，
+                                                     结果连上信号了以后飞机已经被风刮到一个两公里外的荒山沟里去了，
+                                                     还有百分之14的电，那么大的风开了运动档也飞不动了，
+                                                     最后迫降到了山里……提醒飞友，提示风速过大一定要注意",<br>
+                                                    ]                                                        
+                                                    </small>
+                                                </p>
+                                            </p>
+                                            <p><h5>HTTP 返回 Body</h5></p>
+                                            <p>
+                                                <p class="ml-2">
+                                                    JSON 格式的列表,列表的每个元素为一个字典。比如： [{"故障模式":"Float", "发生概率":0.2346, "风险系数":"1类","无人机型号":"悟2","发生环境":"楼顶","人行为":"航拍","无人机行为":"失控漂移","损坏情况":"桨叶破碎"}]
+                                                </p>
+                                            </p>
+                                            <p><h1>Python调用示例</h1></p>
+                                            <p>
+                                                <p class="ml-2">
+                                                    <pre class="prettyprint">
+                                                        <code class="language-py">
+import json
+import requests
+
+CLASSIFY_URL = 'http://uavecosystem.cn/api/fmea'
+
+s = [
+    "好吧，我承认操作失误撞玻璃上了！70多米坠落，竟然没有四分五裂，只是电池飞了，断了骨头连着筋！才买了不到半年啊 崭新崭新的AIR啊",
+    "某天下午玩，那时地面一点风也没有，拉高到500米，正准备拍云，突然提示风速过大，然后姿态球乱飘，一转眼飞飞机飘了300米，因为有干扰，所以失联了，我迅速往飞机那个方向跑，结果连上信号了以后飞机已经被风刮到一个两公里外的荒山沟里去了，还有百分之14的电，那么大的风开了运动档也飞不动了，最后迫降到了山里……提醒飞友，提示风速过大一定要注意"
+]
+
+data = json.dumps(s)
+headers = {
+    'Content-Type': 'application/json'
+}
+resp = requests.post(CLASSIFY_URL, headers=headers, data=data.encode('utf-8'))
+print(resp.text)
+
+                                                        </code>
+                                                    </pre>
+                                                </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script%}
+    {{super()}}
+    <script src="https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js"></script>
+{% endblock %}

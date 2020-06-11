@@ -1,0 +1,9 @@
+<a href="#" onclick="collect_post('/collect_post/{{post_id}}')" class="text-success" style="text-decoration:none;">
+    {% if post_collected_flag %}
+        <li class="fa fa-star fa-2x"></li>
+        <p>已收藏</p>
+    {% else %}                                
+        <li class="fa fa-star-o fa-2x"></li>
+        <p>收藏</p>
+    {% endif %}
+</a>

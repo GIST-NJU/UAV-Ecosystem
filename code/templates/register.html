@@ -1,0 +1,196 @@
+{%extends "base.html"%}
+{% block nav%}
+{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row no-gutter">
+            <div class="d-none d-md-flex col-md-4 col-lg-6 bg-image"></div>
+            <div class="col-md-8 col-lg-6">
+                <div class="row">
+                    <div class="col">
+                        <nav class="navbar navbar-expand-lg navbar-light bg sb-navbar">
+                            <a class="navbar-brand" href="/">
+                                <img src="/static/imgs/drone_icon1.png" alt="" height="50" width="150">
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+                <div class="login d-flex align-items-center py-5">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-9 col-lg-8 mx-auto">
+                                <h3 class="login-heading mb-4 text-info">欢迎加入 UAV Ecosystem!</h3>
+                                <form action = "/register" method = "POST" target="postTo">
+                                    <label class="pl-2">您是一位：</label>
+                                    <div class="form-label-group pl-2">
+                                        <small>
+                                            <div data-toggle="buttons">
+                                                <div class="btn-group">
+                                                    <label class="btn btn-sm btn-success mr-2"> 
+                                                        <input type="radio" name="userType" id="type1" value="无人机用户" class="sr-only" required>
+                                                        无人机用户
+                                                    </label>
+                                                    <label class="btn btn-sm btn-success mr-2">
+                                                        <input type="radio" name="userType" id="type2" value="无人机研究者" class="sr-only" required>
+                                                        无人机研究者
+                                                    </label>
+
+                                                    <label class="btn btn-sm btn-success">
+                                                        <input type="radio" name="userType" id="type3" value="无人机生产厂家" class="sr-only" required>
+                                                        无人机生产厂家
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </small>
+                                    </div>
+                                    <label class="pl-2">您的无人机驾龄：</label>
+                                    <div class="form-label-group pl-2">
+                                        <small>
+                                            <div data-toggle="buttons">
+                                                <div class="btn-group">
+                                                    <label class="btn btn-sm btn-success mr-2"> 
+                                                        <input type="radio" name="drivingAge" id="drivingAgetype1" value="玩机新手" class="sr-only" required>
+                                                        新手
+                                                    </label>
+                                                    <label class="btn btn-sm btn-success mr-2"> 
+                                                        <input type="radio" name="drivingAge" id="drivingAgetype2" value="1年驾龄" class="sr-only" required>
+                                                        1年
+                                                    </label>
+                                                    <label class="btn btn-sm btn-success mr-2"> 
+                                                        <input type="radio" name="drivingAge" id="drivingAgetype3" value="2年驾龄" class="sr-only" required>
+                                                        2年
+                                                    </label>
+                                                    <label class="btn btn-sm btn-success mr-2"> 
+                                                        <input type="radio" name="drivingAge" id="drivingAgetype4" value="3年驾龄" class="sr-only" required>
+                                                        3年
+                                                    </label>
+                                                    <label class="btn btn-sm btn-success mr-2"> 
+                                                        <input type="radio" name="drivingAge" id="drivingAgetype5" value="3年以上驾龄" class="sr-only" required>
+                                                        3年以上
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </small>                                       
+                                    </div>
+                                    <div class="form-label-group">
+                                        <input type="text" id="userid" name="userid"  class="form-control" placeholder="邮箱" required autofocus>
+                                        <label for="userid">邮箱</label>
+                                    </div>
+                                    <div class="form-label-group px-2" id="userid_valid">
+                                        
+                                    </div>
+                                    <div class="form-label-group">
+                                        <input type="text" id="username" name="username"  class="form-control" placeholder="昵称" required autofocus>
+                                        <label for="username">昵称</label>
+                                    </div>
+                                    <div class="form-label-group px-2" id="username_valid">
+
+                                    </div>
+                                    <div class="form-label-group">
+                                    <input type="password"  class="form-control" id="password" name="password" placeholder="密码" aria-label="密码" aria-describedby="basic-addon1" required>
+                                    <label for="password">密码</label>
+                                    </div>
+                                    <button class="btn btn-lg btn-info btn-block btn-login text-uppercase font-weight-bold mb-2" type="submit" id="submit">注册</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block footer%}
+{% endblock %}
+{% block script%}
+    {{super()}}
+    <script>
+        $("#userid").focus(
+            function(){
+                $.ajax({
+                    type:'GET',
+                    url:'/register/userid_valid',
+                    dataType:'html',
+                    success:function(res){
+                        $("#userid_valid").html(res);
+                    },
+                    error:function(res){
+                        console.log(1)
+                    }
+                })
+            }
+        )
+
+    </script>
+    <script>
+        $("#userid").blur(
+            function(){
+                data = {'userid':$("#userid").val()};
+                $.ajax(
+                    {
+                        type:'POST',
+                        data:data,
+                        url:'/register/userid_valid',
+                        dataType:'html',
+                        success:function(res){
+                            $("#userid_valid").html(res);
+                            if(res.trim()!="<small></small>"){
+                                $("#submit").attr("disabled",true)
+                            }else{
+                                $("#submit").attr("disabled",false)
+                            }
+                        },
+                        error:function(res){
+                            console.log(1)
+                        }
+                    }
+                )
+            }
+        )
+    </script>
+    <script>
+        $("#username").focus(
+            function(){
+                $.ajax({
+                    type:'GET',
+                    url:'/register/username_valid',
+                    dataType:'html',
+                    success:function(res){
+                        $("#username_valid").html(res);
+                    },
+                    error:function(res){
+                        console.log(1)
+                    }
+                })
+            }
+        )
+
+    </script>
+    <script>
+        $("#username").blur(
+            function(){
+                data = {'username':$("#username").val()};
+                $.ajax(
+                    {
+                        type:'POST',
+                        data:data,
+                        url:'/register/username_valid',
+                        dataType:'html',
+                        success:function(res){
+                            $("#username_valid").html(res);
+                            if(res.trim()!="<small></small>"){
+                                $("#submit").attr("disabled",true)
+                            }else{
+                                $("#submit").attr("disabled",false)
+                            }
+                        },
+                        error:function(res){
+                            console.log(1)
+                        }
+
+                    }
+                )
+            }
+        )
+    </script>
+{% endblock %}

@@ -1,0 +1,186 @@
+{%extends "base.html"%}
+{% block title %}     
+    <title>{{look_user['userName']}}的个人主页-飞客社区</title>
+{% endblock %}
+{% block nav_menu %}
+    <ul class="navbar-nav mr-auto pt-3 pt-lg-0">
+        <li class="nav-item">
+            <a class="nav-link " href="/">首页</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/bbs">讨论区</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/diagnosis">智能诊断</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/papers">文献资源</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/api">服务接口</a>
+        </li>
+    </ul>
+{% endblock %}
+{% block content %}
+    <div class="banner_w3lspvt position-relative">
+        <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                    <img src="{{look_user['userIcon']}}" alt="{{look_user['userName']}}"  id = "avatar_img" height="80" width="80">
+                    
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col text-center text-danger">
+                    <h2>{{look_user['userName']}}</h2>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col text-center text-muted">
+                    <h6>{{look_user['userType']}} /&nbsp {{look_user['drivingAge']}}</h6>
+                </div>
+            </div>
+            
+            <div class="row mt-2 shadow-lg rounded">
+                <div class="col px-0">
+                    {% if current_user_flag %}
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link {{css_dict[0]}}" href="/user/{{look_user['id']}}/0">我的帖子</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{css_dict[1]}}" href="/user/{{look_user['id']}}/1">最近浏览</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{css_dict[2]}}" href="/user/{{look_user['id']}}/2">最近消息</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{css_dict[3]}}" href="/user/{{look_user['id']}}/3">我的收藏</a>
+                        </li>
+                    </ul>
+                    {% else %}
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link {{css_dict[0]}}" href="/user/{{look_user['id']}}/0">最近帖子</a>
+                        </li>
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+            {% if log_id == 0 %}
+                <div class="row mt-2 shadow-lg rounded bg-white">
+                    <div class="col">
+                        <small>
+                            {% for item in data %}
+                                <div class="row mx-1 px-0 border-bottom">
+                                    <div class="col-3 py-4 px-0 text-muted">
+                                        {{item['createTime']}}&nbsp;发布
+                                    </div>
+                                    <div class="col-7 py-4 px-0">
+                                        <a href="/post/{{item['postId']}}" style="text-decoration:none;" class="text-success">
+                                            {{item['title']}}
+                                        </a>
+                                    </div>
+                                    <div class="col-2 py-3 text-danger text-right">
+                                         {% if current_user_flag %}
+                                            <a class="btn btn-sm btn-danger" href="/delete_post/{{item['postId']}}">
+                                                <i class="fa fa-trash-o"></i> 
+                                                删除
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <div class="row">
+                                <div class="col text-center">
+                                    {{pagination.links}}
+                                </div>
+                            </div>
+                        </small>
+
+                    </div>
+                </div>
+                <!-- 最近帖子-->
+            {% elif log_id == 1 %}
+                <div class="row mt-2 shadow-lg rounded bg-white">
+                    <div class="col">
+                            {% for item in data %}
+                                <div class="row mx-1 px-0 pt-3 border-bottom">
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="col text-muted">
+                                                {{item['MAX(lookTime)']}}&nbsp;您浏览了
+                                            </div>
+                                        </div>
+                                        <small>
+                                        <div class="row bg-light py-3">
+                                            <div class="col">
+                                                <span>
+                                                    <a href="/post/{{item['postId']}}" style="text-decoration:none;" class="text-success">
+                                                        {{item['any_value(title)']}}
+                                                    </a>
+                                                </span>
+                                                <span>
+                                                    {{item['any_value(content)'][:80]}}......
+                                                </span>
+                                            </div>
+
+                                        </div>
+                                        </small>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <div class="row">
+                                <div class="col text-center">
+                                    {{pagination.links}}
+                                </div>
+                            </div>
+                    </div>
+                </div>
+                <!-- 最近浏览-->
+            {% elif log_id == 2 %}
+                <!-- 最近消息-->
+            {% else %}
+                <!--log_id ==3 
+                    我的收藏-->
+                <div class="row mt-2 shadow-lg rounded bg-white">
+                    <div class="col">
+                            {% for item in data %}
+                                <div class="row mx-1 px-0 pt-3 border-bottom">
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="col text-muted">
+                                                {{item['collectedTime']}}&nbsp;您收藏了
+                                            </div>
+                                        </div>
+                                        <small>
+                                        <div class="row bg-light py-3">
+                                            <div class="col">
+                                                <span>
+                                                    <a href="/post/{{item['postId']}}" style="text-decoration:none;" class="text-success">
+                                                        {{item['title']}}
+                                                    </a>
+                                                </span>
+                                                <span>
+                                                    {{item['content'][:80]}}......
+                                                </span>
+                                            </div>
+
+                                        </div>
+                                        </small>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <div class="row">
+                                <div class="col text-center">
+                                    {{pagination.links}}
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            {% endif %}
+
+
+        </div>
+    </div>
+{% endblock%}

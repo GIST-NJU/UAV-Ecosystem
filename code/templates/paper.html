@@ -1,0 +1,241 @@
+{%extends "base.html"%}
+{% block title %}     
+    <title>文献资源-无人机故障分析/容错设计/容错性测试-飞客社区</title>
+{% endblock %}
+{% block nav_menu %}
+    <ul class="navbar-nav mr-auto pt-3 pt-lg-0">
+        <li class="nav-item">
+            <a class="nav-link " href="/">首页</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/bbs">讨论区</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/diagnosis">智能诊断</a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="/papers">文献资源</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/api">服务接口</a>
+        </li>
+    </ul>
+{% endblock %}
+{% block content %}
+    <div class="banner_w3lspvt position-relative">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div class="row shadow-lg mt-3">
+                        <div class="col px-0">
+                            <div class="card">
+                                <div class="card-header px-0 py-0">
+                                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="trend-tab" data-toggle="tab" href="#trend" role="tab" aria-controls="trend" aria-selected="true">发展趋势</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">文献画像</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="uppaper-tab" data-toggle="tab" href="#uppaper" role="tab" aria-controls="uppaper" aria-selected="false">上传文献</a>
+                                        </li>                                        
+                                    </ul>
+                                </div>
+                                <div class="card-body">
+                                    <div class="tab-content" id="myTabContent">
+                                        <div class="tab-pane fade show active" id="trend" role="tabpanel" aria-labelledby="trend-tab">
+                                            <div class="row">
+                                                <div class="col" id="trendChart" style="width:600px;height:500px">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                            <div class="row">
+                                                <div class="col text-center" id="profileChart" style="width:600px;height:500px">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="uppaper" role="tabpanel" aria-labelledby="uppaper-tab">
+                                            <div class="col" id="paperChart">
+                                                <form action="/upload_paper" method = "POST" target="postTo" id='uploadpaper'>
+                                                    <p>
+                                                        <label for="title" class="text-muted">标题</label>
+                                                        <textarea class="form-control" id="title" rows="1", name="title"></textarea>
+                                                    </p>
+                                                    <p>
+                                                        <label for="authors" class="text-muted">作者列表</label>
+                                                        <textarea class="form-control" id="authors" rows="1", name="authors"></textarea>
+                                                    </p>
+                                                    <p>
+                                                        <label for="abstract" class="text-muted">论文摘要</label>
+                                                        <textarea class="form-control" id="abstract" rows="1", name="abstract"></textarea>
+                                                    </p>
+                                                    <p>
+                                                        <label for="keywords" class="text-muted">论文关键词</label>
+                                                        <textarea class="form-control" id="keywords" rows="1", name="keywords"></textarea>
+                                                    </p>
+                                                    <p>
+                                                        <label for="year" class="text-muted">发表年份</label>
+                                                        <textarea class="form-control" id="year" rows="1", name="year"></textarea>
+                                                    </p>
+                                                    <p>
+                                                        <label for="booktitle" class="text-muted">发表在</label>
+                                                        <textarea class="form-control" id="booktitle" rows="1", name="booktitle"></textarea>
+                                                    </p>
+                                                    <p>
+                                                        <label for="url" class="text-muted">文章链接</label>
+                                                        <textarea class="form-control" id="url" rows="1", name="url"></textarea>
+                                                    </p>                                                       
+                                                    <p><input class="btn btn-info" onclick="alert('上传成功，等待审核')" type="submit" value = "上传" /></p>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row shadow-lg mt-3">
+                        <div class="col px-0">
+                            <div class="card">
+                                <div class="card-header text-info font-weight-bold">
+                                    文献列表
+                                </div>
+                                <div class="card-body">
+                                    {% for item in data %}
+                                        <div class="row border-bottom mx-1">
+                                            <div class="col">
+                                                <p>
+                                                    <h6>{{item['title']}}
+                                                        <a class="text-muted" href="{{item['url']}}"><li class="fa fa-globe ml-1"></li></a>
+                                                    </h6>
+                                                </p>
+                                                <p class="text-success">{{item['authors']}}</p>
+                                                <p class="text-muted">
+                                                    <small>
+                                                        {{item['booktitle']}}
+                                                    </small>                                                
+                                                </p>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                                <div class="card-footer">
+                                    {{pagination.links}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script%}
+    {{super()}}
+    <script src="/static/js/echarts.min.js"></script>
+    <script src="/static/js/echarts-wordcloud.min.js"></script>
+    <script>
+        var allData = {{ visual_data|tojson }};
+        var trendChart = echarts.init(document.getElementById('trendChart'));
+        var keywordChart = echarts.init(document.getElementById('profileChart'));
+        var option1 = {
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data:['论文数量']
+                    },
+                    feature : {
+                        mark : {show: true},
+                        dataView : {show: true, readOnly: false},
+                        magicType : {show: true, type: ['line', 'bar']},
+                        restore : {show: true},
+                        saveAsImage : {show: true}
+                    },
+                    xAxis : [
+                        {
+                            type : 'category',
+                            boundaryGap : false,
+                            data : allData.years,
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value',
+                            axisLabel : {
+                                formatter: '{value}'
+                            },
+
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'论文数量',
+                            type:'line',
+                            data:allData.paperYearCnt,
+                            markPoint : {
+                                data : [
+                                    {type : 'max', name: '最大值'},
+                                    {type : 'min', name: '最小值'}
+                                ]
+                            },
+                            markLine : {
+                                data : [
+                                    {type : 'average', name: '平均值'}
+                                ]
+                            }
+                        },]
+                };
+        
+        var keywords = allData.keywords
+        var keyworddata = [];
+        for (var name in keywords) {
+            keyworddata.push({
+                name: name,
+                value: keywords[name]
+            })
+        }
+        var option2 = {
+                tooltip: {},
+                grid: {
+                    left: 'center',
+                },
+                series: [ {
+                    type: 'wordCloud',
+                    gridSize: 2,
+                    sizeRange: [12, 50],
+                    rotationRange: [-90, 90],
+                    shape: 'pentagon',
+                    drawOutOfBound: true,
+                    textStyle: {
+                        normal: {
+                            color: function () {
+                                return 'rgb(' + [
+                                    Math.round(Math.random() * 160),
+                                    Math.round(Math.random() * 160),
+                                    Math.round(Math.random() * 160)
+                                ].join(',') + ')';
+                            }
+                        },
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowColor: '#333'
+                        }
+                    },
+                    data: keyworddata
+                } ]
+        };
+        trendChart.setOption(option1);
+        keywordChart.setOption(option2);
+        window.addEventListener("resize", function() {
+            trendChart.resize();
+            keywordChart.resize();
+        });
+    </script>
+{% endblock %}

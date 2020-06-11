@@ -1,0 +1,9 @@
+<a href="#" onclick="like_post('/like_post/{{post_id}}')" class="text-success" style="text-decoration:none;">
+    {% if post_like_flag %}
+        <li class="fa fa-thumbs-up fa-2x"></li>
+        <p>已赞</p>
+    {% else %}
+        <li class="fa fa-thumbs-o-up fa-2x"></li>
+        <p>有用</p>                                    
+    {% endif %}
+</a>

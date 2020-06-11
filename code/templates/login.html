@@ -1,0 +1,56 @@
+{%extends "base.html"%}
+{% block nav%}
+{% endblock %}
+{% block content %}
+        <div class="container-fluid">
+            <div class="row no-gutter">
+                <div class="d-none d-md-flex col-md-4 col-lg-6 bg-image"></div>
+                <div class="col-md-8 col-lg-6">
+                    <div class="row">
+                        <div class="col">
+                            <nav class="navbar navbar-expand-lg navbar-light bg sb-navbar">
+                                <a class="navbar-brand" href="/">
+                                    <img src="/static/imgs/drone_icon1.png" alt="" height="50" width="150">
+                                </a>
+                            </nav>
+                        </div>
+                    </div>
+                <div class="login d-flex align-items-center py-5">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-9 col-lg-8 mx-auto">
+                                <h3 class="login-heading mb-4 text-info">欢迎回来</h3>
+                                <form action = "/login" method = "POST">
+                                    <form-label-group>
+                                        {% with messages = get_flashed_messages() %}
+                                            <div>{{ messages[0] }}</div>
+                                        {% endwith %}
+                                    </form-label-group>
+                                    <div class="form-label-group">
+                                        <input type="text" id="username" name="username"  class="form-control" placeholder="邮箱/昵称" required autofocus>
+                                        <label for="username">邮箱/昵称</label>
+                                    </div>
+                                    <div class="form-label-group">
+                                        <input type="password"  class="form-control" id="password" name="password" placeholder="密码" aria-label="密码" aria-describedby="basic-addon1" required>
+                                        <label for="password">密码</label>
+                                    </div>
+                                    <div class="custom-control custom-checkbox mb-3">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck1">
+                                        <label class="custom-control-label" for="customCheck1">记住密码</label>
+                                    </div>
+                                    <button class="btn btn-lg btn-info btn-block btn-login text-uppercase font-weight-bold mb-2" type="submit">登录</button>
+                                    <div class="text-center">
+                                        <a class="small" href="#">忘记密码/</a>
+                                        <a class="small" href="/register">点击注册</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}
+{% block footer%}
+{% endblock %}

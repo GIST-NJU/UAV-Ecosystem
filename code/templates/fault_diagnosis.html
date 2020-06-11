@@ -1,0 +1,210 @@
+{%extends "base.html"%}
+{% block title %}     
+    <title>智能诊断-无人机故障智能诊断/智能分析/Auto-FMEA-飞客社区</title>
+{% endblock %}
+{% block nav_menu %}
+    <ul class="navbar-nav mr-auto pt-3 pt-lg-0">
+        <li class="nav-item">
+            <a class="nav-link " href="/">首页</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/bbs">讨论区</a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="/diagnosis">智能诊断</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/papers">文献资源</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/api">服务接口</a>
+        </li>
+    </ul>
+{% endblock %}
+{% block content %}
+    <div class="banner_w3lspvt position-relative">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div class="row bg-light mt-3 shadow-lg">
+                        <div class="col px-0">
+                            <div class="card">
+                                <div class="card-header text-info">
+                                    请输入您的故障描述
+                                </div>
+                                <div class="card-body">
+                                    <form action="/diagnosis" method = "POST" target="postTo" id='uploadpaper'>
+                                        <p>
+                                            <textarea class="form-control text-muted" id="content" rows="8", name="content">{{diagnosis_text}}</textarea>
+                                        </p>
+                                        <p><input class="btn btn-info" type="submit" value = "诊断一下" /></p>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-2 shadow-lg px-0 py-0">
+                            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                <a class="nav-link active" id="v-pills-diagnosis-tab" data-toggle="pill" href="#v-pills-diagnosis" role="tab" aria-controls="v-pills-diagnosis" aria-selected="true">故障诊断</a>
+                                <a class="nav-link" id="v-pills-fmea-tab" data-toggle="pill" href="#v-pills-fmea" role="tab" aria-controls="v-pills-fmea" aria-selected="false">故障模式与影响分析</a>
+                            </div>
+                        </div>
+                        <div class="col-10 shadow-lg pl-2 pr-0 py-0">
+                            <div class="tab-content" id="v-pills-tabContent">
+                                <div class="tab-pane fade show active" id="v-pills-diagnosis" role="tabpanel" aria-labelledby="v-pills-diagnosis-tab">
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    故障类型预测
+                                                </div>
+                                                <div class="card-body" >
+                                                    <div class="row">
+                                                        <div class="col" id="probaChart" style="width:1000px;height:750px"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="v-pills-fmea" role="tabpanel" aria-labelledby="v-pills-fmea-tab">
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    故障模式与影响分析
+                                                </div>
+                                                <div class="card-body">
+                                                    <table class="table table-bordered"> 
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>故障模式</td>
+                                                                <td>{{fmea_dict['fault_mode']}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>故障发生概率</td>
+                                                                <td>{{fmea_dict['proba']}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>故障风险系数</td>
+                                                                <td>{{fmea_dict['risk']}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>无人机型号</td>
+                                                                <td>{{fmea_dict[0]}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>环境</td>
+                                                                <td>{{fmea_dict[1]}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>人行为</td>
+                                                                <td>{{fmea_dict[2]}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>无人机行为</td>
+                                                                <td>{{fmea_dict[3]}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>损坏情况</td>
+                                                                <td>{{fmea_dict[4]}}</td>
+                                                            </tr>                                                                
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block script%}
+    {{super()}}
+    <script src="/static/js/echarts.min.js"></script>
+    <script>
+        var allData = {{ data|tojson }};
+        var probaChart = echarts.init(document.getElementById('probaChart'));
+        var option1 = {
+            title : {
+                    text: '故障类型',
+                    subtext: '概率分布',
+                    x:'center'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b}: {c} ({d}%)"
+            },
+            legend: {
+                orient: 'vertical',
+                x: 'left',
+                data:[
+                        'Bias',
+                        'Drift',
+                        'Performance degradation',
+                        'Freezing',
+                        'Calibration error',
+                        'Lock in place',
+                        'Float',
+                        'Hard over',
+                        'Loss of Effectiveness',
+                        '失误操作',
+                        '电池故障',
+                        '信号干扰',
+                        '避障失效',
+                        '返航故障',
+                        '其他'
+                ]
+            },
+            series: [
+                {
+                    name:'预测概率',
+                    type:'pie',
+                    center:['50%', '50%'],
+                    radius: ['50%', '70%'],
+                    avoidLabelOverlap: true,
+                    label: {
+                        normal: {
+                            show: false,
+                            position: 'center'
+                        },
+                        emphasis: {
+                            show: true,
+                            textStyle: {
+                                fontSize: '25',
+                                fontWeight: 'bold'
+                            }
+                        }
+                    },
+                    labelLine: {
+                        normal: {
+                            show: false
+                        }
+                    },
+                    data:allData,
+                    itemStyle:{
+                        color:function(params) {
+                        //自定义颜色
+                            var colorList = [           
+                                    '#C1232B','#B5C334','#FCCE10','#E87C25','#27727B',                                    
+                                    '#FE8463','#9BCA63','#FAD860','#F3A43B','#60C0DD',                                            
+                                    '#D7504B','#C6E579','#F4E001','#F0805A','#26C0C0'
+                            ];
+                            return colorList[params.dataIndex]
+                        }
+                    }
+                }
+            ],
+        };
+        probaChart.setOption(option1)
+        window.addEventListener("resize", function() {
+            probaChart.resize();
+        });
+    </script>
+{% endblock %}

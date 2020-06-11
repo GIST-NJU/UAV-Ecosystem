@@ -1,0 +1,56 @@
+                                        <div class="col bg-light">
+                                            {% for comment_dit in comments[post_reply['postReplyId']] %}
+                                            <div class="row mx-1 border-bottom">
+                                                <div class="col py-2">
+                                                    <small>
+                                                        <div class="row mb-1">
+                                                            <div class="col px-0">
+                                                                <a class="mx-0 py-0 text-success" style="text-decoration:none;" href="/user/{{comment_dit['author_user.id']}}/0">{{comment_dit['commentAuthorName']}}</a>
+                                                                {% if comment_dit['commentAuthorName'] == post['userName'] %}
+                                                                <span class="badge badge-secondary">楼主</span>
+                                                                {% endif %}
+
+                                                                {% if comment_dit['commentTargetAuthorName'] == comment_dit['replyAuthorName'] %}
+                                                                :&nbsp;
+                                                                {% else %}
+                                                                回复&nbsp;<a class="mx-0 py-0 text-success" style="text-decoration:none;" href="/user/{{comment_dit['target_user.id']}}/0">{{comment_dit['commentTargetAuthorName']}}</a>
+                                                                    {% if comment_dit['commentTargetAuthorName'] == post['userName'] %}
+                                                                    <span class="badge badge-secondary">楼主</span>
+                                                                    {% endif %}
+                                                                :&nbsp;
+                                                                {% endif %}
+                                                                {{comment_dit['commentContent']}}
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-1">
+                                                            <div class="col px-0 text-muted text-left">
+                                                                {{comment_dit['commentCreateTime']}}
+                                                            </div>
+                                                            <div class="col px-0 text-right">
+                                                                <a href="#replyComment{{comment_dit['commentId']}}" style="text-decoration:none;" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="replyComment{{comment_dit['commentId']}}" class="text-info">回复</a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row collapse" id="replyComment{{comment_dit['commentId']}}">
+                                                            <div class="col px-0">
+                                                                <textarea class="form-control" name="replycommentContent{{comment_dit['commentId']}}" id="replycommentContent{{comment_dit['commentId']}}" style="min-width: 100%" rows="1"></textarea>
+                                                                <p class="text-right">
+                                                                    <a href="##" onclick='replyPostReplyComments("/replyComment/{{post_reply['postId']}}-{{post_reply['postReplyId']}}-{{comment_dit['commentId']}}")' class="btn btn-info btn-sm">回复</a>
+                                                                </p>
+                                                                
+                                                
+                                                            </div>
+                                                        </div>
+
+                                                    </small>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                            <div class="row py-2 mx-1">
+                                                <div class="col px-0">
+                                                    <textarea class="form-control" name="commentContent{{post_reply['postReplyId']}}" id="commentContent{{post_reply['postReplyId']}}" style="min-width: 100%" rows="1"></textarea>
+                                                    <p class="text-right">
+                                                        <a href="##" onclick='replyPostReply("/replyPostReply/{{post_reply['postId']}}-{{post_reply['postReplyId']}}")' class="btn btn-info btn-sm">回复</a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>

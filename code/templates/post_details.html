@@ -1,0 +1,960 @@
+{%extends "base.html"%}
+{% block title %}     
+    <title>{{post['title']}}-飞客社区</title>
+{% endblock %}
+{% block nav_menu %}
+    <ul class="navbar-nav mr-auto pt-3 pt-lg-0">
+        <li class="nav-item">
+            <a class="nav-link " href="/">首页</a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" href="/bbs">讨论区</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/diagnosis">智能诊断</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/papers">文献资源</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/api">服务接口</a>
+        </li>
+    </ul>
+{% endblock %}
+{% block content %}
+    <div class="banner_w3lspvt position-relative">
+        <div class="container">
+            <div class="row">
+                <div class="col-8 mr-1 shadow-lg rounded">
+                    <div class="row mt-3 mx-1">
+                        <div class="col border-bottom">
+                            <div class="row">
+                                <div class="col">
+                                    <li class="fa fa-square mr-1"></li> {{post['title']}}
+                                </div>
+                            </div>
+                            <div class="row my-3">
+                                <div class="col-1 mr-3 pt-1 px-0">
+                                    <a href="/user/{{post['user.id']}}/0">
+                                        <img src="{{post['userIcon']}}" alt="{{post['authorName']}}" class="rounded-circle" width="50" height="50">
+                                    </a>
+                                </div>
+                                <div class="col-10 ml-3 px-0">
+                                    <div class="row mb-2">
+                                        <div class="col px-0">
+                                            <small>
+                                                <a class="mx-0 py-0 text-danger" style="text-decoration:none;" href="/user/{{post['user.id']}}/0">{{post['userName']}}</a>
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-5 px-0 text-muted">
+                                            <small>
+                                                发表于&nbsp;{{post['createTime']}}
+                                            </small>
+                                        </div>
+                                        <div class="col-7 px-0 text-right">
+                                            <small>
+                                                <span class="mr-1 text-muted">
+                                                    有用{{post['likeCnts']}}
+                                                </span>
+                                                <span class="mr-1 text-muted">
+                                                    无用{{post['hateCnts']}}
+                                                </span>
+                                                <span class="mr-1">
+                                                    <a href="#editor" class="text-muted" style="text-decoration:none;">
+                                                        回复{{post['replyCnts']}}
+                                                    </a>
+                                                </span>
+                                                <span class="ml-1 text-muted">
+                                                    浏览{{post['lookCnts']}}
+                                                </span>
+                                            </small>                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3 mx-1">
+                        <div class="col pb-3">
+                            {{post['contentHtml']|safe}}
+                        </div>
+                    </div>
+                    <div class="row py-3 mx-1">
+                        <div class="col text-center text-muted px-0" id="collection_content">
+                             <a href="#" onclick="collect_post('/collect_post/{{post["postId"]}}')" class="text-success" style="text-decoration:none;">
+                                {% if post_collected_flag %}
+                                    <li class="fa fa-star fa-2x"></li>
+                                    <p>已收藏</p>
+                                {% else %}                                
+                                    <li class="fa fa-star-o fa-2x"></li>
+                                    <p>收藏</p>
+                                {% endif %}
+                             </a>
+                        </div>
+                        <div class="col text-center text-muted px-0" id="like_content">
+                            <a href="#" onclick="like_post('/like_post/{{post["postId"]}}')" class="text-success" style="text-decoration:none;">
+                                {% if post_like_flag %}
+                                    <li class="fa fa-thumbs-up fa-2x"></li>
+                                    <p>已赞</p>
+                                {% else %}
+                                    <li class="fa fa-thumbs-o-up fa-2x"></li>
+                                    <p>有用</p>                                    
+                                {% endif %}
+                            </a>
+                        </div>
+                        <div class="col text-center text-muted px-0" id="hate_content">
+                            <a href="#" onclick="hate_post('/hate_post/{{post["postId"]}}')" class="text-success" style="text-decoration:none;">
+                                {% if post_hate_flag %}
+                                    <li class="fa fa-thumbs-down fa-2x"></li>
+                                    <p>已踩</p>
+                                {% else %}
+                                    <li class="fa fa-thumbs-o-down fa-2x"></li>
+                                    <p>无用</p>                                    
+                                {% endif %}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3 ml-1">
+                    <div class="row shadow-lg rounded mb-2">
+                        <div class="col">
+                            <h5 class="mt-2 font-weight-bold"><li class="fa fa-square mr-1"></li>相关帖子</h5>
+                            {% for simi_post in simi_posts %}
+                                <div class="row mx-1 border-bottom">
+                                    <div class="col py-2">
+                                        <div class="row">
+                                            <div class="col px-0">
+                                                <small>
+                                                    <a class="text-dark" style="text-decoration:none;" href="/post/{{simi_post['postId']}}">{{simi_post['title']}}</a>
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="row text-muted">
+                                            <div class="col-9 px-0 text-left">
+                                                <small>
+                                                    发布于{{simi_post['createTime']}}
+                                                </small>
+                                            </div>
+                                            <div class="col-3 px-0 text-right">
+                                                <small>
+                                                    浏览({{simi_post['lookCnts']}})
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>  
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="row shadow-lg rounded mt-2">
+                        <div class="col">
+                            <h5 class="mt-2 font-weight-bold"><li class="fa fa-square mr-1"></li>资源推荐</h5>
+                            {% for item in papers %}
+                            <div class="row border-bottom mx-1">
+                                <div class="col">
+                                    <p>
+                                        <small>
+                                        <h6>{{item['title']}}
+                                            <a class="text-muted" href="{{item['url']}}"><li class="fa fa-globe ml-1"></li></a>
+                                        </h6>
+                                        </small>
+                                    </p>
+                                    <p class="text-success">
+                                        <small>
+                                            {{item['authors']}}
+                                        </small>
+                                    </p>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-8 bg-white shadow-lg rounded px-0">
+                    <div class="card">
+                        <div class="card-header text-info">
+                            智能故障预测
+                        </div>
+                        <div class="card-body" >
+                            <div class="row">
+                                <div class="col" id="probaChart" style="width:800px;height:750px">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+            <div class="row mt-3">
+                <div class="col-8 bg-white shadow-lg rounded px-0">
+                    <div class="card">
+                        <div class="card-header text-info">
+                            故障类型投票
+                        </div>
+                        <div class="card-body">
+                            <div class="row" id="voteChartContent">
+                                <div class="col" id="voteChart" style="width:800px;height:750px">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer" id="voteBtnsContent">
+                            <div class="row my-1">
+                                <div class="col text-center">
+                                    <button type="button" class="btn btn-sm btn-info" onclick="typeVote('/typeVote/{{post["postId"]}}/0')">Bias</button>
+                                    <button type="button" class="btn btn-sm btn-info" onclick="typeVote('/typeVote/{{post["postId"]}}/1')">Drift</button>
+                                    <button type="button" class="btn btn-sm btn-info" onclick="typeVote('/typeVote/{{post["postId"]}}/2')">Performance degradation</button>
+                                    <button type="button" class="btn btn-sm btn-info" onclick="typeVote('/typeVote/{{post["postId"]}}/3')">Freezing</button>
+                                    <button type="button" class="btn btn-sm btn-info" onclick="typeVote('/typeVote/{{post["postId"]}}/4')">Calibration error</button>
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col text-center">
+                                    <button type="button" class="btn btn-sm btn-info" onclick="typeVote('/typeVote/{{post["postId"]}}/5')">Lock in place</button>
+                                    <button type="button" class="btn btn-sm btn-info" onclick="typeVote('/typeVote/{{post["postId"]}}/6')">Float</button>
+                                    <button type="button" class="btn btn-sm btn-info" onclick="typeVote('/typeVote/{{post["postId"]}}/7')">Hard over</button>
+                                    <button type="button" class="btn btn-sm btn-info" onclick="typeVote('/typeVote/{{post["postId"]}}/8')">Loss of Effectiveness</button>
+                                    <button type="button" class="btn btn-sm btn-info" onclick="typeVote('/typeVote/{{post["postId"]}}/9')">失误操作</button>
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col text-center">
+                                    <button type="button" class="btn btn-sm btn-info" onclick="typeVote('/typeVote/{{post["postId"]}}/10')">电池故障</button>
+                                    <button type="button" class="btn btn-sm btn-info" onclick="typeVote('/typeVote/{{post["postId"]}}/11')">信号干扰</button>
+                                    <button type="button" class="btn btn-sm btn-info" onclick="typeVote('/typeVote/{{post["postId"]}}/12')">避障失效</button>
+                                    <button type="button" class="btn btn-sm btn-info" onclick="typeVote('/typeVote/{{post["postId"]}}/13')">返航故障</button>
+                                    <button type="button" class="btn btn-sm btn-info" onclick="typeVote('/typeVote/{{post["postId"]}}/14')">其他</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-8 bg-white shadow-lg rounded px-0">
+                    <div class="card">
+                        <div class="card-header text-info">
+                            故障模式与影响分析结果
+                        </div>
+                        <div class="card-body" >
+                            <table class="table table-bordered"> 
+                                <tbody>
+                                    <tr>
+                                        <td class="font-weight-bold">故障模式</td>
+                                        <td>{{fmea_dict['fault_mode']}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold">故障发生概率</td>
+                                        <td>{{fmea_dict['proba']}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold">故障风险系数</td>
+                                        <td>{{fmea_dict['risk']}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold">无人机型号</td>
+                                        <td>{{fmea_dict[0]}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold">发生环境</td>
+                                        <td>{{fmea_dict[1]}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold">人行为</td>
+                                        <td>{{fmea_dict[2]}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold">无人机行为</td>
+                                        <td>{{fmea_dict[3]}}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold">损坏情况</td>
+                                        <td>{{fmea_dict[4]}}</td>
+                                    </tr>                                                                
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-8 bg-white shadow-lg rounded">
+                    <div class="row my-3 mx-1">
+                        <div class="col text-dark">
+                            <li class="fa fa-square mr-1"></li>{{post['replyCnts']}}条回帖
+                        </div>
+                        <div class="col text-right">
+                            <a href="#editor" class="btn btn-info">回帖</a>
+                        </div>
+                    </div>
+
+                    {% if post['have_reply'] %}
+                        {% for post_reply in post_replys%}
+                            <div class="row py-3 px-0 mx-1 border-bottom" id="postReply{{post_reply['postReplyId']}}">
+                                <div class="col-1 mr-3 pt-1 px-0">
+                                    <a href="/user/{{post_reply['user.id']}}/0">
+                                        <img src="{{post_reply['userIcon']}}" alt="{{post_reply['authorName']}}" class="rounded-circle" width="50" height="50">
+                                    </a>
+                                </div>
+                                <div class="col-10 ml-3 px-0">
+                                    <div class="row">
+                                        <div class="col px-0">
+                                            <small>
+                                                <a class="mx-0 py-0 text-danger" style="text-decoration:none;" href="/user/{{post_reply['user.id']}}/0">
+                                                    {{post_reply['userName']}}
+                                                    
+
+                                                </a>
+                                                {% if post_reply['userName'] == post['userName']%}
+                                                <span class="badge badge-secondary">楼主</span>
+                                                {% endif %}
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col px-0">
+                                            {{post_reply['replyContentHtml']|safe}}
+                                        </div>
+                                    </div>
+                                    <div class="row mt-1">
+                                        <div class="col-5 px-0 text-muted">
+                                            <small>
+                                                发表于&nbsp;{{post_reply['replyTime']}}
+                                            </small>
+                                        </div>
+                                        <div class="col-7 px-0 text-right">
+                                            <small>
+                                                <span class="mr-1 ">
+                                                    <a href="###" id="likepostreply{{post_reply['postReplyId']}}" onclick="like_post_reply('/like_post_reply/{{post["postId"]}}-{{post_reply["postReplyId"]}}')" class="text-info" style="text-decoration:none;">
+                                                        {% if post_reply['postreplyflag'] %}
+                                                            已赞({{post_reply['likeCnts']}})
+                                                        {% else %}
+                                                            赞({{post_reply['likeCnts']}})
+                                                        {% endif %}
+                                                    </a>
+                                                </span>
+                                                <span class="mr-1">
+                                                    <a href="#commentList{{post_reply['postReplyId']}}" class="text-info" style="text-decoration:none;" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="commentList{{post_reply['postReplyId']}}">
+                                                        回复({{post_reply['commentCnts']}})
+                                                    </a>
+                                                </span>
+                                            </small>                                          
+                                        </div>
+                                    </div>
+                                    {% if post_reply['commentCnts'] == 0 %}
+                                    <div class="row collapse"  id="commentList{{post_reply['postReplyId']}}">
+                                    {% else %}
+                                    <div class="row collapse show"  id="commentList{{post_reply['postReplyId']}}">
+                                    {% endif %}
+                                        <div class="col bg-light">
+                                            {% for comment_dit in comments[post_reply['postReplyId']] %}
+                                            <div class="row mx-1 border-bottom">
+                                                <div class="col py-2">
+                                                    <small>
+                                                        <div class="row mb-1">
+                                                            <div class="col px-0">
+                                                                <a class="mx-0 py-0 text-success" style="text-decoration:none;" href="/user/{{comment_dit['author_user.id']}}/0">{{comment_dit['commentAuthorName']}}</a>
+                                                                {% if comment_dit['commentAuthorName'] == post['userName'] %}
+                                                                <span class="badge badge-secondary">楼主</span>
+                                                                {% endif %}
+
+                                                                {% if comment_dit['commentTargetAuthorName'] == comment_dit['replyAuthorName'] %}
+                                                                :&nbsp;
+                                                                {% else %}
+                                                                回复&nbsp; <a class="mx-0 py-0 text-success" style="text-decoration:none;" href="/user/{{comment_dit['target_user.id']}}/0">{{comment_dit['commentTargetAuthorName']}}</a>
+                                                                {% if comment_dit['commentTargetAuthorName'] == post['userName'] %}
+                                                                <span class="badge badge-secondary">楼主</span>
+                                                                {% endif %}
+                                                                :&nbsp;
+                                                                {% endif %}
+                                                                {{comment_dit['commentContent']}}
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mt-1">
+                                                            <div class="col px-0 text-muted text-left">
+                                                                {{comment_dit['commentCreateTime']}}
+                                                            </div>
+                                                            <div class="col px-0 text-right">
+                                                                <a href="#replyComment{{comment_dit['commentId']}}" style="text-decoration:none;" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="replyComment{{comment_dit['commentId']}}" class="text-info">回复</a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row collapse" id="replyComment{{comment_dit['commentId']}}">
+                                                            <div class="col px-0">
+                                                                <textarea class="form-control" name="replycommentContent{{comment_dit['commentId']}}" id="replycommentContent{{comment_dit['commentId']}}" style="min-width: 100%" rows="1"></textarea>
+                                                                <p class="text-right">
+                                                                    <a href="##" onclick='replyPostReplyComments("/replyComment/{{post_reply['postId']}}-{{post_reply['postReplyId']}}-{{comment_dit['commentId']}}")' class="btn btn-info btn-sm">回复</a>
+                                                                </p>
+                                                                
+                                                
+                                                            </div>
+                                                        </div>
+
+                                                    </small>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                            <div class="row py-2 mx-1">
+                                                <div class="col px-0">
+                                                    <textarea class="form-control" name="commentContent{{post_reply['postReplyId']}}" id="commentContent{{post_reply['postReplyId']}}" style="min-width: 100%" rows="1"></textarea>
+                                                    <p class="text-right">
+                                                        <a href="##" onclick='replyPostReply("/replyPostReply/{{post_reply['postId']}}-{{post_reply['postReplyId']}}")' class="btn btn-info btn-sm">回复</a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="row py-3">
+                            <div class="col text-center text-muted">
+                                <img src="/static/imgs/sofa.png" alt="" class="rounded-circle mb-2" width="100" height="100">
+                                <p>
+                                    <small>
+                                        帖子还没人回复，快来抢沙发吧！
+                                    </small>
+                                </p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+
+            <div class="row mt-3">
+                <div class="col-8 bg-white shadow-lg rounded">
+                    <form action="/replypost/{{post['postId']}}" method = "POST" target="postTo" >
+                        <input type="hidden" id="replyContentHtml" name="replyContentHtml">
+                        <label for="editor" class="text-muted"></label>
+                        <div class="form-group mt-0" id="editor">
+                        </div>
+                        <p><input class="btn btn-info" type="submit" value = "回帖" /></p>
+                    </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script%}
+    {{super()}}
+    <script src="/static/js/echarts.min.js"></script>
+    <script>
+        var allData = {{ data|tojson }};
+        var probaChart = echarts.init(document.getElementById('probaChart'));
+        var option1 = {
+            title : {
+                    text: '故障类型',
+                    subtext: '概率分布',
+                    x:'center'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b}: {c} ({d}%)"
+            },
+            legend: {
+                orient: 'vertical',
+                x: 'left',
+                data:[
+                        'Bias',
+                        'Drift',
+                        'Performance degradation',
+                        'Freezing',
+                        'Calibration error',
+                        'Lock in place',
+                        'Float',
+                        'Hard over',
+                        'Loss of Effectiveness',
+                        '失误操作',
+                        '电池故障',
+                        '信号干扰',
+                        '避障失效',
+                        '返航故障',
+                        '其他'
+                ]
+            },
+            series: [
+                {
+                    name:'预测概率',
+                    type:'pie',
+                    center:['50%', '50%'],
+                    radius: ['35%', '55%'],
+                    avoidLabelOverlap: true,
+                    label: {
+                        normal: {
+                            show: false,
+                            position: 'center'
+                        },
+                        emphasis: {
+                            show: true,
+                            textStyle: {
+                                fontSize: '18',
+                                fontWeight: 'bold'
+                            }
+                        }
+                    },
+                    labelLine: {
+                        normal: {
+                            show: false
+                        }
+                    },
+                    data:allData,
+                    itemStyle:{
+                        color:function(params) {
+                        //自定义颜色
+                            var colorList = [           
+                                    '#C1232B','#B5C334','#FCCE10','#E87C25','#27727B',                                    
+                                    '#FE8463','#9BCA63','#FAD860','#F3A43B','#60C0DD',                                            
+                                    '#D7504B','#C6E579','#F4E001','#F0805A','#26C0C0'
+                            ];
+                            return colorList[params.dataIndex]
+                        }
+                    }
+                }
+            ],
+        };
+        probaChart.setOption(option1)
+        window.addEventListener("resize", function() {
+            probaChart.resize();
+        });
+    </script>
+    <script>
+        var allData = {{ votecnts_data|tojson }};
+        var voteChart = echarts.init(document.getElementById('voteChart'));
+        var option1 = {
+            title : {
+                    text: '故障类型',
+                    subtext: '投票数量',
+                    x:'center'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b}: {c} ({d}%)"
+            },
+            legend: {
+                orient: 'vertical',
+                x: 'left',
+                data:[
+                        'Bias',
+                        'Drift',
+                        'Performance degradation',
+                        'Freezing',
+                        'Calibration error',
+                        'Lock in place',
+                        'Float',
+                        'Hard over',
+                        'Loss of Effectiveness',
+                        '失误操作',
+                        '电池故障',
+                        '信号干扰',
+                        '避障失效',
+                        '返航故障',
+                        '其他'
+                ]
+            },
+            series: [
+                {
+                    name:'预测概率',
+                    type:'pie',
+                    center:['50%', '50%'],
+                    radius: ['35%', '55%'],
+                    avoidLabelOverlap: true,
+                    label: {
+                        normal: {
+                            show: false,
+                            position: 'center'
+                        },
+                        emphasis: {
+                            show: true,
+                            textStyle: {
+                                fontSize: '18',
+                                fontWeight: 'bold'
+                            }
+                        }
+                    },
+                    labelLine: {
+                        normal: {
+                            show: false
+                        }
+                    },
+                    data:allData,
+                    itemStyle:{
+                        color:function(params) {
+                        //自定义颜色
+                            var colorList = [           
+                                    '#C1232B','#B5C334','#FCCE10','#E87C25','#27727B',                                    
+                                    '#FE8463','#9BCA63','#FAD860','#F3A43B','#60C0DD',                                            
+                                    '#D7504B','#C6E579','#F4E001','#F0805A','#26C0C0'
+                            ];
+                            return colorList[params.dataIndex]
+                        }
+                    }
+                }
+            ],
+        };
+        voteChart.setOption(option1)
+        window.addEventListener("resize", function() {
+            voteChart.resize();
+        });
+    </script>
+
+    <script type="text/javascript">
+            var E = window.wangEditor;
+            var editor = new E('#editor');
+            editor.customConfig.menus = [
+                'head',  // 标题
+                'bold',  // 粗体
+                'fontSize',  // 字号
+                'italic',  // 斜体
+			    'image',  // 插入图片
+                'underline',  // 下划线
+                'strikeThrough',  // 删除线
+                'foreColor',  // 文字颜色
+                //'list',  // 列表
+                'justify',  // 对齐方式
+                //'code' // 插入代码
+                'emoticon'
+            ];
+            editor.customConfig.emotions = [
+                    {
+                        // tab 的标题
+                        title: '默认',
+                        // type -> 'emoji' / 'image'
+                        type: 'image',
+                        // content -> 数组
+                        content: sina_emoji
+                    }
+            ];
+            editor.customConfig.onchange = function (html) {
+                $('#replyContentHtml').val(html)
+            };
+
+                        
+            editor.customConfig.showLinkImg = false;
+                      
+            editor.customConfig.uploadImgServer = '/upload_reply_post_img';
+            editor.customConfig.debug = location.href.indexOf('wangeditor_debug_mode=1') > 0;
+            editor.customConfig.uploadImgMaxSize = 100 * 1024 * 1024
+            editor.customConfig.uploadImgMaxLength = 10000;
+            editor.customConfig.uploadFileName = 'file';
+
+            editor.create();
+            $('#replyContentHtml').val(editor.txt.html())
+    </script>
+    <script type="text/javascript">
+        function typeVote(url){
+            console.log(url)
+            var user_flag = '{{current_user.is_authenticated|safe}}';
+            data = {};
+            if(user_flag =="False"){
+                $.ajax(
+                    {
+                        type:"GET",
+                        url:'/login',
+                        async:true,
+                        success:function(res){
+                            window.location.href = '/login'
+                            console.log(0)
+                        },
+                        error:function(res){
+                            console.log(1)
+                        }
+                    }
+                );
+            }else{
+               $.ajax(
+                    {
+                        type:"POST",
+                        url:url,
+                        data:data,
+                        dataType:'html',
+                        success:function(res){
+                            $("#voteChartContent").html(res);
+
+                            console.log(0)
+                        },
+                        error:function(res){
+                            console.log(1)  
+                        }
+                    }
+                ); 
+            }
+        }
+
+    </script>
+    <script>
+        //回复回帖的回复
+        function replyPostReplyComments(url){
+            var comment_id = url.split('-')[2];
+            var post_reply_id = url.split('-')[1];
+            data  ={
+                    'replycommentContent':$('#replycommentContent'+comment_id).val(),
+            };
+            var user_flag = '{{current_user.is_authenticated|safe}}';
+            if(user_flag =="False"){
+                $.ajax(
+                    {
+                        type:"GET",
+                        url:'/login',
+                        async:true,
+                        success:function(res){
+                            window.location.href = '/login'
+                            console.log(0)
+                        },
+                        error:function(res){
+                            console.log(1)
+                        }
+                    }
+                );
+            }else{
+                $.ajax(
+                    {
+                        type:"POST",
+                        url:url,
+                        data:data,
+                        dataType:'html',
+                        success:function(res){
+                            $("#commentList"+post_reply_id).html(res);
+                            console.log(0)
+                        },
+                        error:function(res){
+                            console.log(1)  
+                        }
+                    }
+                );
+            }
+        }
+    </script>
+    <script>
+        //回复回帖
+        function replyPostReply(url){
+            var post_id = url.split('-')[0];
+            var post_reply_id = url.split('-')[1]
+            data = {
+                'commentContent':$('#commentContent'+post_reply_id).val(),
+            }
+            var user_flag = '{{current_user.is_authenticated|safe}}';
+            if(user_flag =="False"){
+                $.ajax(
+                    {
+                        type:"GET",
+                        url:'/login',
+                        async:true,
+                        success:function(res){
+                            window.location.href = '/login'
+                            console.log(0)
+                        },
+                        error:function(res){
+                            console.log(1)
+                        }
+                    }
+                );
+            }else{
+                $.ajax(
+                    {
+                        type:"POST",
+                        url:url,
+                        data:data,
+                        dataType:'html',
+                        success:function(res){
+                            console.log(post_reply_id)
+                            $("#commentList"+post_reply_id).html(res);
+                            console.log(0)
+                        },
+                        error:function(res){
+                            console.log(1)  
+                        }
+                    }
+                );
+            }
+
+        }
+    </script>
+    <script>
+        //收藏
+        function collect_post(url){
+            data = {
+                
+            };
+            var user_flag = '{{current_user.is_authenticated|safe}}';
+            if(user_flag =="False"){
+                $.ajax(
+                    {
+                        type:"GET",
+                        url:'/login',
+                        async:true,
+                        success:function(res){
+                            window.location.href = '/login'
+                            console.log(0)
+                        },
+                        error:function(res){
+                            console.log(1)
+                        }
+                    }
+                );
+            }
+            else{
+                $.ajax(
+                    {
+                        type:"POST",
+                        url:url,
+                        data:data,
+                        dataType:'html',
+                        success:function(res){
+                            $("#collection_content").html(res);
+                            console.log(0)
+                        },
+                        error:function(res){
+                            console.log(1)
+                        }
+
+                    }
+                );
+            }
+
+        }
+    </script>
+    <script>
+        //有用
+        function like_post(url){
+            data = {
+                
+            };
+            var user_flag = '{{current_user.is_authenticated|safe}}';
+            if(user_flag =="False"){
+                $.ajax(
+                    {
+                        type:"GET",
+                        url:'/login',
+                        async:true,
+                        success:function(res){
+                            window.location.href = '/login'
+                            console.log(0)
+                        },
+                        error:function(res){
+                            console.log(1)
+                        }
+                    }
+                );
+            }
+            else{
+                $.ajax(
+                    {
+                        type:"POST",
+                        url:url,
+                        data:data,
+                        dataType:'html',
+                        success:function(res){
+                            $("#like_content").html(res);
+                            console.log(0)
+                        },
+                        error:function(res){
+                            console.log(1)
+                        }
+
+                    }
+                );
+            }
+
+        }
+    </script>
+    <script>
+        //无用
+        function hate_post(url){
+            data = {
+                
+            };
+            var user_flag = '{{current_user.is_authenticated|safe}}';
+            if(user_flag =="False"){
+                $.ajax(
+                    {
+                        type:"GET",
+                        url:'/login',
+                        async:true,
+                        success:function(res){
+                            window.location.href = '/login'
+                            console.log(0)
+                        },
+                        error:function(res){
+                            console.log(1)
+                        }
+                    }
+                );
+            }
+            else{
+                $.ajax(
+                    {
+                        type:"POST",
+                        url:url,
+                        data:data,
+                        dataType:'html',
+                        success:function(res){
+                            $("#hate_content").html(res);
+                            console.log(0)
+                        },
+                        error:function(res){
+                            console.log(1)
+                        }
+
+                    }
+                );
+            }
+
+        }
+    </script>
+    <script>
+         function like_post_reply(url){
+            data = {
+                
+            };
+            var post_reply_id = url.split('-')[1]
+            var user_flag = '{{current_user.is_authenticated|safe}}';
+            if(user_flag =="False"){
+                $.ajax(
+                    {
+                        type:"GET",
+                        url:'/login',
+                        async:true,
+                        success:function(res){
+                            window.location.href = '/login'
+                            console.log(0)
+                        },
+                        error:function(res){
+                            console.log(1)
+                        }
+                    }
+                );
+            }
+            else{
+                $.ajax(
+                    {
+                        type:"POST",
+                        url:url,
+                        data:data,
+                        dataType:'html',
+                        success:function(res){
+                            $("#likepostreply"+post_reply_id).html(res);
+                            console.log(0)
+                        },
+                        error:function(res){
+                            console.log(1)
+                        }
+                    }
+                )
+            }
+         }
+    </script>
+{% endblock %}

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        {% block head %}
+            <!-- Required meta tags -->
+            <meta charset="utf-8">
+            <!--
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            -->
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <!-- Bootstrap CSS -->
+            <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+
+            <!--
+            <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome-4.7.0/css/font-awesome.min.css') }}">
+            -->
+            
+            <link href="//netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+            <link rel="stylesheet" href="/static/css/mystyle.css">         
+            {% block title %}
+                <title>飞客社区-群智化服务化无人机生态系统平台</title>
+            {% endblock %}
+            <link rel="icon" type="image/x-icon" href="/static/imgs/drone_icon.png">
+         {% endblock %}
+    </head>
+    <body>
+        {% block nav%}
+        <nav class="navbar navbar-expand-lg navbar-light bg-light sb-navbar">
+            <div class="container">
+                    <a class="navbar-brand" href="/">
+                        <img src="/static/imgs/drone_icon1.png" alt="" height="50" width="150">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="true" aria-label="Toggle navigation">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                    <div class="navbar-collapse collapse show" id="navbarSupportedContent">
+                        {% block nav_menu %}
+                        <ul class="navbar-nav mr-auto pt-3 pt-lg-0">
+                            <li class="nav-item active">
+                                <a class="nav-link " href="/">首页</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/bbs">讨论区</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/diagnosis">智能诊断</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/papers">文献资源</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/api">服务接口</a>
+                            </li>
+                        </ul>
+                        {% endblock %}
+                        <ul class="navbar-nav pb-3 mr-2 pb-lg-0">
+                            <li class="nav-item">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="col px-0">
+                                                <form class="form-inline " method="GET" name="search" action="/search">
+                                                <div class="input-group">
+                                                    <input class="form-control  border-right-0 rounded-0" style="background-color: transparent;" type="search" name="key_word" placeholder="search" id="searchInput"  aria-label="Search">
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-outline-info border-left-0  border rounded-0" style="background-color: transparent;" type="submit" id="searchIcon">
+                                                            <i class="fa fa-search"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        <!--
+                                        <div class="row">
+                                            <div class="col px-0">
+                                                <div class="dropdown-menu px-3" id="searchDropdown" style="width: 100%;">
+
+                                                    <a class="dropdown-item disabled border-bottom px-0 text-muted mt-1" href="#">飞客热搜</a>
+                                                    <a class="dropdown-item px-0" href="#">避障失效 <img src="/static/imgs/fire.png" alt=""></a>
+                                                    <a class="dropdown-item px-0" href="#">大疆精灵 <img src="/static/imgs/fire.png" alt=""></a>
+                                                    <a class="dropdown-item px-0" href="#">侧飞失误撞楼</a>
+                                                    <a class="dropdown-item px-0" href="#">云台掉落</a>
+                                                    <a class="dropdown-item px-0" href="#">丢失GPS信号</a>
+                                                    <div class="row mt-2">
+                                                        <div class="col ml-3 px-0 text-left text-muted border-bottom">搜索历史</div>
+                                                        <div class="col mr-3 px-0 text-right text-muted border-bottom"> <a style="text-decoration:none" href="#" class="text-muted"><i class="fa fa-trash-o"></i>清除</a></div>
+                                                    </div>
+                                                    <a class="dropdown-item px-0" href="#">传感器故障</a>
+                                                    <a class="dropdown-item px-0" href="#">大疆御</a>
+                                                    <a class="dropdown-item px-0" href="#">大疆Air</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        -->
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                        {% if current_user.is_authenticated %}
+                            <ul class="navbar-nav pb-3 mx-2 pb-lg-0">
+                                <li>
+                                    <a class="btn btn-info " href="/user/{{current_user.user_uid}}/2">
+                                            消息 <span class="badge badge-danger" id="msg_cnts">0</span>
+                                        <span class="sr-only">未读消息</span>
+                                    </a>
+                                </li>
+                            </ul>
+                            <ul class="navbar-nav pb-3 pb-lg-0">
+                                <li class="nav-item">
+                                    <div class="dropdown mydropdowncss">
+                                        <a class="dropdown mydropdowncss" href="" data-toggle="dropdown" id="dropdownMenuLink">
+                                            <img src="{{current_user.user_icon}}" alt="{{current_user.name}}" width="40" height="40">
+                                        </a>
+                                        <div class="dropdown-menu border-0" aria-labelledby="dropdownMenuLink">
+                                            <a class="dropdown-item text-muted" href="/user/{{current_user.user_uid}}/0">
+                                                <i class="fa fa-user mr-2"></i>个人中心
+                                            </a>
+                                            <a class="dropdown-item text-muted" href="#">
+                                                <i class="fa fa-cog mr-2"></i>账号设置
+                                            </a>
+                                            <a class="dropdown-item text-muted" href="/logout">
+                                                <i class="fa fa-sign-out mr-2"></i>退出登录
+                                            </a>
+                                        </div>
+                                    </div>
+                                </li>         
+                            </ul>  
+                        {% else %}
+                            <ul class="navbar-nav pb-3 pb-lg-0">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/login">登录/注册</a>
+                                </li>   
+                            </ul>
+                        {% endif %}
+                </div>
+            </div>
+        </nav>
+        {% endblock %}
+        {% block content %}
+        {% endblock %}
+        {% block footer%}
+            <footer class="bg-white mt-5">
+                <div class="container text-center">
+                    <div class="row">
+                        <div class="col text-center" style="color:#939393;">
+                            联系方式:&nbsp;support@uavecosystem.cn
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <a target="_blank" href="http://beian.miitbeian.gov.cn" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;"> 苏ICP备19066452号</p></a>
+                            <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=32011302320828" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="/static/imgs/beian.png" style="float:left;"/><p style="float:left;height:20px;line-height:20px;margin: 0px 0px 0px 5px; color:#939393;">苏公网安备 32011302320828号</p></a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        {% endblock %}
+        {% block script%}
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="/static/js/jquery-3.4.1.min.js"></script>
+        <script src="/static/js/popper.min.js"></script>
+        <script src="/static/js/bootstrap.min.js"></script>
+        <!-- Optional JavaScript -->
+        <!--<script src="{{ url_for('static', filename='js/18829dec5a.js')}}"></script>
+        -->
+        <script src="https://unpkg.com/wangeditor@3.1.1/release/wangEditor.min.js"></script>
+        <script src="/static/js/sina_emoji.js"></script>
+        <script>
+            $("#searchInput").focus(
+                function(){
+                    $("#searchDropdown").show();
+                    $("#searchInput").css("background-color","white")
+                    $("#searchIcon").css("background-color","white")
+                }
+            )
+        </script>
+        <script>
+            $("#searchInput").blur(
+                function(){
+                    $("#searchDropdown").hide();
+                    $("#searchInput").css("background-color","transparent")
+                    $("#searchIcon").css("background-color","transparent")
+                }
+            )
+        </script>
+        <script>
+            $("#searchIcon").hover(
+                function(){
+                    $("#searchIcon").css("background-color","#17a2b8")
+                },
+                function(){
+                    $("#searchIcon").css("background-color","transparent")
+                }
+            )
+        </script>
+        <script>
+            $(document).ready(function(){
+
+                user_flag = {{current_user.is_authenticated|tojson}};
+                user_id = {{current_user.get_id()|tojson}};
+                if(user_flag){
+                    $.ajax({
+                        type:"GET",
+                        dataType:"json",
+                        url:"/get_message_count",
+                        data:{user_id:user_id},
+                        success:function(result){
+                            console.log(result)
+                            $("#msg_cnts").text(result)
+                        },
+                        error:function(result){
+                            console.log(result)
+                        }
+                    });
+                }else{
+                    console.log(0)
+                }
+                console.log(user_flag);
+            })
+        </script>
+        {% endblock %}
+    </body>
+</html>
